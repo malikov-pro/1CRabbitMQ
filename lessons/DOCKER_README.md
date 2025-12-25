@@ -1,8 +1,110 @@
-# RabbitMQ для 1С:Предприятие — Docker Setup
+# RabbitMQ запуск сервиса в Docker
 
 Быстрый запуск RabbitMQ для разработки и тестирования с компонентой 1CRabbitMQ.
 
+> 📄 **Файл конфигурации:** [`docker-compose.yml`](./docker-compose.yml)
+
 ## 🚀 Быстрый старт
+
+### Шаг 1: Установка Docker
+
+#### Windows
+
+1. Скачайте и установите **Docker Desktop for Windows**:
+   - 📥 [Скачать Docker Desktop](https://www.docker.com/products/docker-desktop/)
+   - Минимальные требования: Windows 10/11 64-bit, WSL 2
+   
+2. Запустите Docker Desktop
+   - После установки Docker Desktop запустится автоматически
+   - Убедитесь, что Docker работает (иконка в трее должна быть зелёной)
+
+3. Проверьте установку:
+   ```powershell
+   docker --version
+   docker-compose --version
+   ```
+
+> **💡 Примечание:** Docker Desktop для Windows включает Docker Compose автоматически.
+
+#### Linux (Ubuntu/Debian)
+
+1. Обновите список пакетов:
+   ```bash
+   sudo apt update
+   ```
+
+2. Установите необходимые пакеты:
+   ```bash
+   sudo apt install -y ca-certificates curl gnupg lsb-release
+   ```
+
+3. Добавьте официальный GPG ключ Docker:
+   ```bash
+   sudo mkdir -p /etc/apt/keyrings
+   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+   ```
+
+4. Добавьте репозиторий Docker:
+   ```bash
+   echo \
+     "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+     $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   ```
+
+5. Установите Docker Engine и Docker Compose:
+   ```bash
+   sudo apt update
+   sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+   ```
+
+6. Добавьте текущего пользователя в группу docker (чтобы не использовать sudo):
+   ```bash
+   sudo usermod -aG docker $USER
+   newgrp docker
+   ```
+
+7. Проверьте установку:
+   ```bash
+   docker --version
+   docker compose version
+   ```
+
+> **💡 Примечание:** В новых версиях Docker команда `docker-compose` заменена на `docker compose` (без дефиса).
+
+#### Linux (CentOS/RHEL/Fedora)
+
+1. Установите необходимые пакеты:
+   ```bash
+   sudo dnf install -y dnf-plugins-core
+   ```
+
+2. Добавьте репозиторий Docker:
+   ```bash
+   sudo dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+   ```
+
+3. Установите Docker:
+   ```bash
+   sudo dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+   ```
+
+4. Запустите Docker:
+   ```bash
+   sudo systemctl start docker
+   sudo systemctl enable docker
+   ```
+
+5. Добавьте пользователя в группу docker:
+   ```bash
+   sudo usermod -aG docker $USER
+   newgrp docker
+   ```
+
+### Шаг 2: Запуск RabbitMQ
+
+1. Скопируйте [`docker-compose.yml`](./docker-compose.yml) в отдельную папку
+2. Перейдите в эту папку в терминале
+3. Выполните команды:
 
 ```bash
 # Запустить RabbitMQ
@@ -32,12 +134,6 @@ docker-compose down -v
 - **Пароль:** `rmpassword`
 
 > **⚠️ Важно:** Для production измените учетные данные в файле `docker-compose.yml`!
-
-### Строка подключения из 1С
-
-```bsl
-СтрокаПодключения = "amqp://rmuser:rmpassword@localhost:5672/%2f";
-```
 
 ## 🌐 Management UI
 
@@ -135,11 +231,4 @@ df -h
 ## 📚 Дополнительные ресурсы
 
 - [Официальная документация RabbitMQ](https://www.rabbitmq.com/documentation.html)
-- [Руководства по использованию с 1С](./Lesson1_ru.md)
-- [Документация компоненты 1CRabbitMQ](./1CRabbitMQ/README.md)
-- [Полная документация API](./Component_API_Documentation.md)
-
----
-
-**Готов к работе!** 🎉 Теперь можете запускать примеры из уроков.
 
